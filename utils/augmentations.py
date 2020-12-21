@@ -33,10 +33,9 @@ def rotation_270(images, targets):
     return images, targets
 
 def random_bright(images, targets):
-    # delta = 0.1
-    # delta = random.uniform(-delta, delta)
-    # images = images + delta
-    # images
-    trans = transforms.ColorJitter(brightness=0.1, contrast=0.1)
-    images = trans(images)
+    delta = 0.1
+    delta = random.uniform(-delta, delta)
+    images = images + delta
+    #trans = transforms.ColorJitter(brightness=0.1, contrast=0.1)
+    #images = trans(images)
     return images, targets

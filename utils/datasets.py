@@ -139,8 +139,7 @@ class ListDataset(Dataset):
                 elif rand_num < 0.3:
                     img, targets = rotation_270(img, targets)
                 if np.random.random() < 0.4:
-                    pass
-                    #img, targets = random_bright(img, targets)
+                    img, targets = random_bright(img, targets)
 
         return img_path, img, targets
 
