@@ -7,7 +7,7 @@ from PIL import Image
 import torch
 import torch.nn.functional as F
 
-from utils.augmentations import horisontal_flip
+from utils.augmentations import *
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 
@@ -18,7 +18,7 @@ def pad_to_square(img, pad_value):
     # (upper / left) padding and (lower / right) padding
     pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
     # Determine padding
-    pad = (0, 0, pad1, pad2) if h <= w else (pad1, pad2, 0, 0)
+    pad = (0, 0, int(pad1), int(pad2)) if h <= w else (int(pad1), int(pad2), 0, 0)
     # Add padding
     img = F.pad(img, pad, "constant", value=pad_value)
 
@@ -126,8 +126,21 @@ class ListDataset(Dataset):
 
         # Apply augmentations
         if self.augment:
-            if np.random.random() < 0.5:
-                img, targets = horisontal_flip(img, targets)
+            rand_num = np.random.random()
+            if np.random.random() < 0.6:
+                if np.random.random() < 0.3:
+                    img, targets = horisontal_flip(img, targets)
+                if np.random.random() < 0.3:
+                    img, targets = vertical_flip(img, targets)
+                if rand_num < 0.1:
+                    img, targets = rotation_90(img, targets)
+                elif rand_num < 0.2:
+                    img, targets = rotation_180(img, targets)
+                elif rand_num < 0.3:
+                    img, targets = rotation_270(img, targets)
+                if np.random.random() < 0.4:
+                    pass
+                    #img, targets = random_bright(img, targets)
 
         return img_path, img, targets
 

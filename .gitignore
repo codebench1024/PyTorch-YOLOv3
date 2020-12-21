@@ -8,5 +8,9 @@ output
 data/coco
 backup
 weights/*.weights
+weights/darknet*
 __pycache__
 checkpoints
+data/custom/det_result
+*.txt
+logs

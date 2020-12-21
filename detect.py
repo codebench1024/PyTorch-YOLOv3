@@ -21,6 +21,24 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 
+def save_det_result(txt_dir, img_paths, detections):
+    '''
+    save detection results.
+    :param img_paths:   image path
+    :param detections:  [tensor[]]
+    :return:
+    '''
+    for idx, img_path in enumerate(img_paths):
+        txt_path = os.path.join(txt_dir, os.path.basename(img_path).split(".")[0])
+        txt_path = txt_path + '.txt'
+        with open(txt_path, 'w') as file:
+            objs = detections[idx]
+            # only get first detection, because each image has only one airport
+            det = objs.numpy().tolist()
+            det[0][-1] = int(det[0][-1])
+            print("%s___%s_%s_%s_%s" % (os.path.basename(img_path).split(".")[0], int(det[0][0]), int(det[0][1]), int(det[0][2]), int(det[0][3])))
+            file.write(' '.join(map(str, det[0])))
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_folder", type=str, default="data/samples", help="path to dataset")
@@ -86,7 +104,10 @@ if __name__ == "__main__":
         # Save image and detections
         imgs.extend(img_paths)
         img_detections.extend(detections)
-
+        print(type(detections[0]))
+        print(img_paths, detections[0].numpy().tolist())
+        save_det_result("data/custom/det_result", img_paths, detections)
+    '''
     # Bounding-box colors
     cmap = plt.get_cmap("tab20b")
     colors = [cmap(i) for i in np.linspace(0, 1, 20)]
@@ -139,3 +160,4 @@ if __name__ == "__main__":
         filename = path.split("/")[-1].split(".")[0]
         plt.savefig(f"output/{filename}.png", bbox_inches="tight", pad_inches=0.0)
         plt.close()
+    '''
