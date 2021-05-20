@@ -17,9 +17,12 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from torch.autograd import Variable
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
+import copy
 
 def save_det_result(txt_dir, img_paths, detections):
     '''
@@ -29,32 +32,40 @@ def save_det_result(txt_dir, img_paths, detections):
     :return:
     '''
     for idx, img_path in enumerate(img_paths):
+        if detections[idx] == None:
+            print("img_paths=%s, detections=None" % img_paths)
+            continue
+        img = np.array(Image.open(img_path))
+        detections_idx = rescale_boxes(copy.deepcopy(detections[idx]), opt.img_size, img.shape[:2])
         txt_path = os.path.join(txt_dir, os.path.basename(img_path).split(".")[0])
         txt_path = txt_path + '.txt'
         with open(txt_path, 'w') as file:
-            objs = detections[idx]
-            # only get first detection, because each image has only one airport
+            objs = detections_idx
+            if objs == None or objs == []:
+                continue
+            # only get first detection(max confidence one), because each image has only one airport
             det = objs.numpy().tolist()
             det[0][-1] = int(det[0][-1])
-            print("%s___%s_%s_%s_%s" % (os.path.basename(img_path).split(".")[0], int(det[0][0]), int(det[0][1]), int(det[0][2]), int(det[0][3])))
+            print("\'%s___%s_%s_%s_%s\'," % (os.path.basename(img_path).split(".")[0], int(det[0][0]), int(det[0][1]), int(det[0][2]), int(det[0][3])), end=" ")
             file.write(' '.join(map(str, det[0])))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_folder", type=str, default="data/samples", help="path to dataset")
-    parser.add_argument("--model_def", type=str, default="config/yolov3.cfg", help="path to model definition file")
+    parser.add_argument("--image_folder", type=str, default="/media/user/新加卷1/THU天智杯-20200910/result/test/test_resize1664", help="path to dataset")
+    parser.add_argument("--model_def", type=str, default="config/yolov3-custom.cfg", help="path to model definition file")
     parser.add_argument("--weights_path", type=str, default="weights/yolov3.weights", help="path to weights file")
-    parser.add_argument("--class_path", type=str, default="data/coco.names", help="path to class label file")
-    parser.add_argument("--conf_thres", type=float, default=0.8, help="object confidence threshold")
-    parser.add_argument("--nms_thres", type=float, default=0.4, help="iou thresshold for non-maximum suppression")
+    parser.add_argument("--class_path", type=str, default="data/custom/classes.names", help="path to class label file")
+    parser.add_argument("--conf_thres", type=float, default=0.6, help="object confidence threshold")
+    parser.add_argument("--nms_thres", type=float, default=0.3, help="iou thresshold for non-maximum suppression")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
-    parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
+    parser.add_argument("--img_size", type=int, default=1664, help="size of each image dimension")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
     opt = parser.parse_args()
     print(opt)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
     os.makedirs("output", exist_ok=True)
 
@@ -99,15 +110,13 @@ if __name__ == "__main__":
         current_time = time.time()
         inference_time = datetime.timedelta(seconds=current_time - prev_time)
         prev_time = current_time
-        print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
+        #print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
 
         # Save image and detections
         imgs.extend(img_paths)
         img_detections.extend(detections)
-        print(type(detections[0]))
-        print(img_paths, detections[0].numpy().tolist())
-        save_det_result("data/custom/det_result", img_paths, detections)
-    '''
+        save_det_result("output/", img_paths, detections)
+
     # Bounding-box colors
     cmap = plt.get_cmap("tab20b")
     colors = [cmap(i) for i in np.linspace(0, 1, 20)]
@@ -160,4 +169,3 @@ if __name__ == "__main__":
         filename = path.split("/")[-1].split(".")[0]
         plt.savefig(f"output/{filename}.png", bbox_inches="tight", pad_inches=0.0)
         plt.close()
-    '''

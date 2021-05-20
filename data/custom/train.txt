@@ -1,1 +1,10 @@
-data/custom/images/train.jpg
+/data/konglingbin/graduate_demo/airport/images/download_andersen_2.tif
+/data/konglingbin/graduate_demo/airport/images/download_andersen_3.tif
+/data/konglingbin/graduate_demo/airport/images/download_andersen_4.tif
+/data/konglingbin/graduate_demo/airport/images/download_japan_jiashouna_2.tif
+/data/konglingbin/graduate_demo/airport/images/download_japan_jiashouna_3.tif
+/data/konglingbin/graduate_demo/airport/images/download_japan_jiashouna_4.tif
+/data/konglingbin/graduate_demo/airport/images/download_korea_guangzhou_1.tif
+/data/konglingbin/graduate_demo/airport/images/download_korea_guangzhou_2.tif
+/data/konglingbin/graduate_demo/airport/images/download_korea_guangzhou_3.tif
+/data/konglingbin/graduate_demo/airport/images/download_korea_guangzhou_4.tif

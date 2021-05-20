@@ -1,1 +1,2 @@
-data/custom/images/train.jpg
+-rw-rw-r-- 1 konglingbin konglingbin 153896 Apr 22 20:04 /data/konglingbin/graduate_demo/airport/images/download_andersen_1.tif
+-rw-rw-r-- 1 konglingbin konglingbin 204120 Apr 22 20:04 /data/konglingbin/graduate_demo/airport/images/download_japan_jiashouna_1.tif
