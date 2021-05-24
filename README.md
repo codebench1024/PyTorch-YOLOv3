@@ -1,4 +1,31 @@
 # PyTorch-YOLOv3
+graduate_demo分支是我毕设答辩时，训练机场检测模型的分支，使用方式和原版的YOLOv3相同，可以看后面的官方运行说明。
+我主要是根据机场的特点，修改了先验锚框尺寸、类别数量，也就是config文件夹和data文件夹下的内容；还修改了机场的提取方式，每张图像只提取最大置信度的目标。tools文件夹的convert.py是为了将416尺寸的机场图像转化为原始的高分辨率图像。
+
+## 飞机检测的步骤（前4步为机场检测）：
+1. 将原始图像转化为宽边为416尺寸的图像
+2. 训练集标注（注意yolo的标注格式是xyrb，即：中心点坐标和宽高），并训练模型
+3. 在测试集上检测机场，提取最高置信度的机场，命令示例：  python detect.py --image_folder /data/konglingbin/graduate_demo/airport/images --model_def config/yolov3-custom.cfg --weights_path checkpoints/yolov3_ckpt_400.pth --class_path data/custom/classes.names --img_size 416
+4. 每张图像输出了机场坐标后，由于坐标是在416尺寸下的小坐标，因此需要再映射回原始大尺寸图像下的坐标
+5. 调用DOTA_devkit的ImgSplit_multi_process_filter_no_airport.py，如果图像检出机场，只切割机场区域的图像；如果没有检出机场，切割全图。
+6. 调用DOTA_devkit的ImgSplit.py或ImgSplit_multi_process.py切割训练集，制作成COCO格式进行CenterFPANet模型训练。
+7. 将切割后的小图制作成COCO格式（DOTA_devkit的DOTA2COCO.py），放入CenterFPANet中测试，可参考命令CenterNet/src/test.sh来执行检测结果，得到高于置信度阈值的飞机目标。
+*注意上面的DOTA_devkit和CenterFPANet都是graduate_demo分支的。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 A minimal PyTorch implementation of YOLOv3, with support for training, inference and evaluation.
 
 ## Installation
