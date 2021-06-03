@@ -1,5 +1,5 @@
 # PyTorch-YOLOv3
-graduate_demo分支是我毕设答辩时，训练机场检测模型的分支，使用方式和原版的YOLOv3相同，可以看后面的官方运行说明。
+graduate_demo分支是我毕设答辩时，训练机场检测模型的分支，使用方式和原版的YOLOv3相同，可以看后面的官方运行说明，也可以找网上的博客详细解读。
 我主要是根据机场的特点，修改了先验锚框尺寸、类别数量，也就是config文件夹和data文件夹下的内容；还修改了机场的提取方式，每张图像只提取最大置信度的目标。tools文件夹的convert.py是为了将416尺寸的机场图像转化为原始的高分辨率图像。
 
 ## 飞机检测的步骤（前4步为机场检测）：
@@ -15,15 +15,7 @@ graduate_demo分支是我毕设答辩时，训练机场检测模型的分支，�
 
 
 
-以下为原本的YOLOv3官方文档。
-
-
-
-
-
-
-
-
+## 以下为原本的YOLOv3官方文档。
 
 
 A minimal PyTorch implementation of YOLOv3, with support for training, inference and evaluation.
